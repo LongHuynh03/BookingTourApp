@@ -1,5 +1,5 @@
 import { Stack } from "expo-router";
-import { GluestackUIProvider } from "@components/ui/gluestack-ui-provider";
+import { GluestackUIProvider } from "@/lib/ui/gluestack-ui-provider"
 // eslint-disable-next-line import/no-unresolved
 import "global.css";
 
