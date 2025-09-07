@@ -1,3 +1,5 @@
+import { gluestackPlugin } from '@gluestack-ui/utils'
+
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: [
@@ -198,4 +200,5 @@ module.exports = {
       },
     },
   },
+  plugin: [gluestackPlugin]
 };
