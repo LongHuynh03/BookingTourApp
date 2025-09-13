@@ -5,8 +5,6 @@ import HomeScreen from "@pages/home-screen/HomeScreen";
 import OrderScreen from "@pages/order-screen/OrderScreen";
 import ProfileScreen from "@pages/profile-screen/ProfileScreen";
 import SearchScreen from "@pages/search-screen/SearchScreen";
-import SearchLocationScreen from "@pages/search-screen/SearchLocationScreen";
-import Onboarding_Product_Tour_02 from "@pages/Onboarding_Product_Tour_02/Onboarding_Product_Tour_02";
 import SplashScreen from "@pages/splash-screen/SplashScreen";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
@@ -39,8 +37,6 @@ const MainStackNavigator = () => {
         }}>
             <Stack.Screen name="Login" component={LoginScreen} />
             <Stack.Screen name="Register" component={RegisterScreen} />
-            <Stack.Screen name="SearchLocation" component={SearchLocationScreen} />
-            <Stack.Screen name="OnboardingTour02" component={Onboarding_Product_Tour_02} />
         </Stack.Navigator>
     )
 }

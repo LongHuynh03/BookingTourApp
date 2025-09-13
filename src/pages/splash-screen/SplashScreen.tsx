@@ -10,25 +10,12 @@ const SplashScreen = () => {
     navigation.navigate("Auth", { screen: "Login" });
   }
 
-  const onPressSearchLocation = () => {
-    navigation.navigate("Auth", { screen: "SearchLocation" });
-  }
-
-  const onPressOnboardingTour02 = () => {
-    navigation.navigate("Auth", { screen: "OnboardingTour02" });
-  }
 
   return (
     <ImageBackground className="flex-1 justify-center items-center bg-white" source={require('@assets/images/bg-plash.png')}>
       <Text className="text-2xl font-bold mb-8">Booking Tour App</Text>
       <Button onPress={onpress} className="bg-blue-500 px-6 py-2 rounded-lg mt-4">
         <ButtonText>Get Started</ButtonText>
-      </Button>
-      <Button onPress={onPressSearchLocation} className="bg-green-500 px-6 py-2 rounded-lg mt-4">
-        <ButtonText>Tìm địa điểm</ButtonText>
-      </Button>
-      <Button onPress={onPressOnboardingTour02} className="bg-purple-500 px-6 py-2 rounded-lg mt-4">
-        <ButtonText>Onboarding Tour 02</ButtonText>
       </Button>
     </ImageBackground>
   )
