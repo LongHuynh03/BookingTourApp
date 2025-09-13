@@ -1,4 +1,4 @@
-import { HStack, Text } from "@/lib/ui";
+import { HStack, Text } from "@libs/ui";
 
 export default function Index() {
   return (
