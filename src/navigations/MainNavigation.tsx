@@ -100,7 +100,7 @@ const MainNavigation = () => {
         <Stack.Navigator screenOptions={{
             headerShown: false
         }}>
-            <Stack.Screen name="Splash" component={SplashScreen} />
+            <Stack.Screen name="Splash" component={SplashScreen}/>
             <Stack.Screen name="Auth" component={MainStackNavigator}/>
             <Stack.Screen name="Content" component={MainBottomTabNavigator}/>
         </Stack.Navigator>

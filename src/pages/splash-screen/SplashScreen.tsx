@@ -7,7 +7,7 @@ const SplashScreen = () => {
   const navigation = useNavigation<NativeStackNavigationProp<StackProps>>();
 
   const onpress = () => {
-    navigation.navigate("Auth", { screen: "Login" });
+    navigation.navigate("Content", {screen: 'Home'});
   }
 
 
