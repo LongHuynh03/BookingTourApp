@@ -2,15 +2,13 @@
   "extends": "expo/tsconfig.base",
   "compilerOptions": {
     "strict": true,
+    "jsx": "react-jsx",
     "paths": {
-      // "@/*": [
-      //   "./*",
-      // ],
       "tailwind.config": [
         "./tailwind.config.js"
       ],
-      "@/*": [
-        "./src/*"
+      "@assets/*": [
+        "./assets/*"
       ],
       "@components/*": [
         "./src/components/*"
@@ -29,14 +27,18 @@
       ],
       "@utils/*": [
         "./src/utils/*"
+      ],
+      "@libs/*": [
+        "./src/lib/*"
+      ],
+      "@navigations/*": [
+        "./src/navigations/*"
       ]
     }
   },
   "include": [
     "**/*.ts",
     "**/*.tsx",
-    ".expo/types/**/*.ts",
-    "expo-env.d.ts",
     "nativewind-env.d.ts"
   ]
 }

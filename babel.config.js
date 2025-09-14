@@ -19,15 +19,16 @@ module.exports = function (api) {
           root: ['./'],
 
           alias: {
-            // '@': './',
             'tailwind.config': './tailwind.config.js',
-            '@': './src',
+            '@assets': './assets',
             '@components': './src/components',
             '@config': './src/config',
             '@constants': './src/constants',
             '@pages': './src/pages',
             '@services': './src/services',
             '@utils': './src/utils',
+            '@libs':'./src/lib',
+            '@navigations': './src/navigations'
           },
         },
       ],
