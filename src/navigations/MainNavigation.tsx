@@ -8,8 +8,9 @@ import SearchScreen from "@pages/search-screen/SearchScreen";
 import SplashScreen from "@pages/splash-screen/SplashScreen";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { NavigationContainer } from "@react-navigation/native";
-import { Home, Search, User } from 'lucide-react-native'
+import { Home, Search, User } from 'lucide-react-native';
+import React from 'react';
+import { useAuth } from '../hooks';
 
 export type StackProps = {
     Splash: undefined;
@@ -30,13 +31,28 @@ export type StackProps = {
 const Stack = createNativeStackNavigator();
 const Bottomtab = createBottomTabNavigator();
 
+const LoginScreenWrapper = (props: any) => <LoginScreen {...props} />;
+const RegisterScreenWrapper = (props: any) => <RegisterScreen {...props} />;
+
+// LoginTabWrapper - Component để navigate đến Login full screen
+const LoginTabWrapper = (props: any) => {
+  const { navigation } = props;
+  
+  React.useEffect(() => {
+    // Navigate to Login full screen when this tab is pressed
+    navigation.navigate('Login');
+  }, [navigation]);
+  
+  return null; // This component doesn't render anything
+};
+
 const MainStackNavigator = () => {
     return (
         <Stack.Navigator initialRouteName={"Login"} screenOptions={{
             headerShown: false
         }}>
-            <Stack.Screen name="Login" component={LoginScreen} />
-            <Stack.Screen name="Register" component={RegisterScreen} />
+            <Stack.Screen name="Login" component={LoginScreenWrapper} />
+            <Stack.Screen name="Register" component={RegisterScreenWrapper} />
         </Stack.Navigator>
     )
 }
@@ -66,6 +82,8 @@ const TabBarProfileIcon = ({ color }: { color: string }) => {
 };
 
 const MainBottomTabNavigator = () => {
+    const { isLoggedIn } = useAuth();
+    
     return (
         <Bottomtab.Navigator screenOptions={{
             headerShown: false,
@@ -85,10 +103,21 @@ const MainBottomTabNavigator = () => {
                 tabBarIcon: ({ color }) => <TabBarSearchIcon color={color} />,
                 tabBarLabel: 'Search'
             }} />
-            <Bottomtab.Screen name="Profile" component={ProfileScreen} options={{
-                tabBarIcon: ({ color }) => <TabBarProfileIcon color={color} />,
-                tabBarLabel: 'Profile'
-            }} />
+            {isLoggedIn ? (
+                <Bottomtab.Screen name="Profile" component={ProfileScreen} options={{
+                    tabBarIcon: ({ color }) => <TabBarProfileIcon color={color} />,
+                    tabBarLabel: 'Profile'
+                }} />
+            ) : (
+                <Bottomtab.Screen 
+                    name="LoginTab" 
+                    component={LoginTabWrapper} 
+                    options={{
+                        tabBarIcon: ({ color }) => <TabBarProfileIcon color={color} />,
+                        tabBarLabel: 'Đăng nhập'
+                    }} 
+                />
+            )}
         </Bottomtab.Navigator>
     )
 }
@@ -96,13 +125,41 @@ const MainBottomTabNavigator = () => {
 
 
 const MainNavigation = () => {
+    const { isLoggedIn, loading } = useAuth();
+    
+    // Show splash screen while loading
+    if (loading) {
+        return (
+            <Stack.Navigator screenOptions={{ headerShown: false }}>
+                <Stack.Screen name="Splash" component={SplashScreen} />
+            </Stack.Navigator>
+        );
+    }
+    
     return (
-        <Stack.Navigator screenOptions={{
-            headerShown: false
-        }}>
+        <Stack.Navigator 
+            screenOptions={{ headerShown: false }}
+            initialRouteName="Content"
+        >
             <Stack.Screen name="Splash" component={SplashScreen}/>
             <Stack.Screen name="Auth" component={MainStackNavigator}/>
             <Stack.Screen name="Content" component={MainBottomTabNavigator}/>
+            <Stack.Screen 
+                name="Login" 
+                component={LoginScreenWrapper} 
+                options={{
+                    presentation: 'modal', // Full screen modal
+                    gestureEnabled: true, // Allow swipe to dismiss
+                }}
+            />
+            <Stack.Screen 
+                name="Register" 
+                component={RegisterScreenWrapper} 
+                options={{
+                    presentation: 'modal', // Full screen modal
+                    gestureEnabled: true, // Allow swipe to dismiss
+                }}
+            />
         </Stack.Navigator>
   )
 }
