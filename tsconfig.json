@@ -33,7 +33,10 @@
       ],
       "@navigations/*": [
         "./src/navigations/*"
-      ]
+      ],
+      "@store/*": [
+        "./src/store/*"
+      ],
     }
   },
   "include": [
