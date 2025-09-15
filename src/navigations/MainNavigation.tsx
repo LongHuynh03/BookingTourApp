@@ -3,7 +3,10 @@ import RegisterScreen from "@pages/auth-screen/RegisterScreen";
 import DetailTourScreen from "@pages/detail-tour-screen/DetailTourScreen";
 import HomeScreen from "@pages/home-screen/HomeScreen";
 import OrderScreen from "@pages/order-screen/OrderScreen";
+import EditProfileScreen from "@pages/profile-screen/EditProfileScreen";
+import PolicyScreen from "@pages/profile-screen/PolicyScreen";
 import ProfileScreen from "@pages/profile-screen/ProfileScreen";
+import VersionScreen from "@pages/profile-screen/VersionScreen";
 import SearchScreen from "@pages/search-screen/SearchScreen";
 import SplashScreen from "@pages/splash-screen/SplashScreen";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
@@ -24,6 +27,9 @@ export type StackProps = {
     OnboardingTour02: undefined;
     Order: undefined;
     Profile: undefined;
+    Policy: undefined;
+    Version: undefined;
+    EditProfile: undefined;
     Main: undefined;
 }
 
@@ -141,6 +147,10 @@ const MainNavigation = () => {
             <Stack.Screen name="Splash" component={SplashScreen}/>
             <Stack.Screen name="Auth" component={MainStackNavigator}/>
             <Stack.Screen name="Content" component={MainBottomTabNavigator}/>
+            <Stack.Screen name="Policy" component={PolicyScreen}/>
+            <Stack.Screen name="Version" component={VersionScreen}/>
+            <Stack.Screen name="EditProfile" component={EditProfileScreen}/>
+            <Stack.Screen name="History" component={OrderScreen} />
             <Stack.Screen 
                 name="Login" 
                 component={LoginScreenWrapper} 

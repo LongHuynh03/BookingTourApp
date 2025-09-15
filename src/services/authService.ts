@@ -13,6 +13,7 @@ export interface LoginResponse {
     created_at: string;
     __v: number;
   };
+  token: string;
 }
 
 export interface LoginRequest {
@@ -40,6 +41,7 @@ export interface RegisterResponse {
     created_at: string;
     __v: number;
   };
+  token: string;
 }
 
 // API Base URL
