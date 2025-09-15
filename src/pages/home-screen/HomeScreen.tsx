@@ -1,19 +1,20 @@
+import BackgroundApp from '@components/BackgroundApp';
+import { HStack, Image, Input, InputField, InputIcon, InputSlot, Text, VStack } from '@libs/ui';
+import { StackProps } from '@navigations/MainNavigation';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { TourItem as Tour, TourService } from '@services/index';
+import { PinIcon, Search, User } from 'lucide-react-native';
+import React, { useCallback, useState } from 'react';
 import {
-  ScrollView,
-  Pressable,
   Dimensions,
   FlatList,
+  Pressable,
+  ScrollView,
 } from 'react-native';
-import { Text, Image, VStack, Input, InputIcon, InputField, InputSlot, Button, HStack } from '@libs/ui';
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { useFocusEffect, useNavigation } from '@react-navigation/native';
-import { StackProps } from '@navigations/MainNavigation';
-import BackgroundApp from '@components/BackgroundApp';
-import { PinIcon, Search, User } from 'lucide-react-native';
-import { dataEventLocal, dataListTourLocal } from './data';
-import { getListTour } from './HomeSevice';
+import { useAuth } from '../../hooks';
+import { dataEventLocal } from './data';
 
 export type Event = {
   id: string;
@@ -34,25 +35,7 @@ type User = {
   __v: number;
 }
 
-export type Tour = {
-  _id: string;
-  province_id: {
-    _id: string;
-  };
-  name: string;
-  description: string;
-  available_seats: number;
-  image: string;
-  price: number;
-  departure_date: string;
-  departure_location: string;
-  end_date: string;
-  status: boolean;
-  created_at: string;
-  is_popular: boolean;
-  schedules: string[];
-  locations: string[];
-}
+// Using Tour type from services
 
 type HeaderHomeProps = {
   avatar: string;
@@ -98,11 +81,10 @@ const ItemTour = ({
   return (
     <Pressable
       onPress={onPress}
-      className="overflow-hidden rounded-2xl p-2.5 mb-2.5"
+      className="rounded-2xl p-2.5 mb-2.5"
       style={{
         backgroundColor: "#F5F4F8",
         width: Dimensions.get('screen').width * 0.44,
-        height: Dimensions.get('screen').width * 0.55,
         marginRight: index % 2 === 0 ? 10 : 0,
       }}
     >
@@ -212,7 +194,7 @@ const TextPlus: React.FC<TextPlusProps> = ({
 
 const HomeScreen = () => {
   const navigation = useNavigation<NativeStackNavigationProp<StackProps>>();
-
+  const { user } = useAuth();
   const [text, setText] = React.useState('');
   const [dataUser, setDataUser] = useState<User>();
   const [imageAvatar, setImageAvatar] = useState('');
@@ -224,11 +206,11 @@ const HomeScreen = () => {
       // khi screen focus thì chạy code này
       setDataEvent(dataEventLocal);
 
-      getListTour()
-        .then((res) => {
+      TourService.getAllTours()
+        .then((res: Tour[]) => {
           setDataTour(res);
         })
-        .catch((err) => {
+        .catch((err: unknown) => {
           console.log('Error get list tour', err);
         });
 
@@ -257,20 +239,22 @@ const HomeScreen = () => {
 
   return (
     <BackgroundApp source={require('@assets/images/bg-home.png')}>
-      <HeaderHome2
-        avatar={imageAvatar}
-        checkNotify={true}
-        onPressAvatar={() => {
-          console.log('avatar');
-        }}
-      />
+      {user && (
+        <HeaderHome2
+          avatar={imageAvatar}
+          checkNotify={true}
+          onPressAvatar={() => {
+            navigation.navigate('Profile');
+          }}
+        />
+      )}
       <SafeAreaView className="flex-1 px-[20px]">
         <VStack>
           <Text className=' w-full text-[#4a4a4a] text-[25px]'>
             {
-              dataUser?.name === undefined
+              user?.name === undefined
                 ? `Xin chào! \nHãy bắt đầu khám phá`
-                : `Xin chào, ${dataUser?.name}! \nHãy bắt đầu khám phá`
+                : `Xin chào, ${user?.name}! \nHãy bắt đầu khám phá`
             }
           </Text>
           <Input
@@ -282,9 +266,11 @@ const HomeScreen = () => {
             }}
           >
 
-            <InputField placeholder="Tìm kiếm địa điểm, tour du lịch" />
+            <InputField placeholder="Tìm kiếm địa điểm, tour du lịch" returnKeyType="search" onSubmitEditing={() => navigation.navigate('Search', { keyword: text })} onChangeText={setText} value={text} />
             <InputSlot className='boder-l-2 border-gray-300'>
-              <InputIcon as={Search} size={16} color="gray" />
+              <Pressable onPress={() => navigation.navigate('Search', { keyword: text })}>
+                <InputIcon as={Search} size={16} color="gray" />
+              </Pressable>
             </InputSlot>
           </Input>
         </VStack>
@@ -294,7 +280,7 @@ const HomeScreen = () => {
           numColumns={2}
           keyExtractor={(item) => item._id}
           renderItem={({ item, index }) => (
-            <ItemTour item={item} index={index} onPress={() => { }} />
+            <ItemTour item={item} index={index} onPress={() => navigation.navigate('Detail', { tour_id: item._id })} />
           )}
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{ paddingBottom: 20 }}
@@ -321,13 +307,6 @@ const HomeScreen = () => {
                   style={{ color: "#252B5C" }}>
                   Tour nổi bật
                 </Text>
-                <Pressable onPress={() => { }}>
-                  <Text
-                    className="font-medium me-[20px]"
-                    style={{ color: "#252B5C" }}>
-                    xem tất cả
-                  </Text>
-                </Pressable>
               </VStack>
             </>
           )}

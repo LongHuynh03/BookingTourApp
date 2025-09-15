@@ -161,15 +161,6 @@ const LoginScreen: React.FC<PropsType> = props => {
           />
         </View>
 
-        {/* Forgot Password */}
-        <View className="flex-row justify-end mt-6">
-          <Pressable onPress={() => {}}>
-            <Text className="text-sm font-semibold text-blue-500">
-              Quên mật khẩu?
-            </Text>
-          </Pressable>
-        </View>
-
         {/* Error Message */}
         {error && (
           <View className="mb-4 p-3 bg-red-100 rounded-lg">

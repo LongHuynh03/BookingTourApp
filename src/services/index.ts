@@ -4,3 +4,6 @@ export type { LoginRequest, LoginResponse, RegisterRequest, RegisterResponse } f
 export { BookingService } from './userBookingService';
 export type { BookingTourItem, BookingTourResponse } from './userBookingService';
 
+export { TourService } from './tourService';
+export type { GetAllToursResponse, Tour as TourItem } from './tourService';
+

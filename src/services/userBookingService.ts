@@ -68,6 +68,38 @@ export class BookingService {
     }
     return data.bookingTours || [];
   }
+
+  static async addNewBookingTour(payload: {
+    user_id: string;
+    tour_id: string;
+    discount: number;
+    adult_count: number;
+    child_count: number;
+    price: number;
+    note: string;
+    role: boolean;
+    location_custom: { _id: string; name: string }[];
+  }, token?: string): Promise<{ result: boolean; message: string; bookingTour: BookingTourItem }>{
+    const url = `${API_BASE_URL}/bookingtour/addNewBookingTour`;
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      },
+      body: JSON.stringify(payload),
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const data: { result: boolean; message: string; bookingTour: BookingTourItem } = await response.json();
+    if (!data.result) {
+      throw new Error('Đặt tour thất bại');
+    }
+    return data;
+  }
 }
 
 export default BookingService;

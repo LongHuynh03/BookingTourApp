@@ -17,20 +17,21 @@ import { useAuth } from '../hooks';
 export type StackProps = {
     Splash: undefined;
     Auth: { screen?: string };
-    Content: { screen?: string };
+    Content: { screen?: string; params?: any };
     Login: undefined;
     Register: undefined;
     Home: undefined;
-    Detail: undefined;
-    Search: undefined;
+    Detail: { tour_id: string } | undefined;
+    Search: { keyword?: string } | undefined;
     SearchLocation: undefined;
     OnboardingTour02: undefined;
     Order: undefined;
+    Booking: { tour_id: string } | undefined;
     Profile: undefined;
     Policy: undefined;
     Version: undefined;
     EditProfile: undefined;
-    Main: undefined;
+    Main: { screen?: string; params?: any } | undefined;
 }
 
 const Stack = createNativeStackNavigator();
@@ -62,6 +63,7 @@ const OrderStackNavigator = () => {
             <Stack.Screen name="Home" component={HomeScreen} />
             <Stack.Screen name="Detail" component={DetailTourScreen} />
             <Stack.Screen name="Order" component={OrderScreen} />
+            <Stack.Screen name="Booking" component={require('@pages/detail-tour-screen/BookingScreen').default} />
         </Stack.Navigator>
     )
 }
@@ -128,23 +130,14 @@ const MainBottomTabNavigator = () => {
 
 
 const MainNavigation = () => {
-    const { isLoggedIn, loading } = useAuth();
-    
-    // Show splash screen while loading
-    if (loading) {
-        return (
-            <Stack.Navigator screenOptions={{ headerShown: false }}>
-                <Stack.Screen name="Splash" component={SplashScreen} />
-            </Stack.Navigator>
-        );
-    }
-    
+    const { isLoggedIn } = useAuth();
+
     return (
         <Stack.Navigator 
             screenOptions={{ headerShown: false }}
-            initialRouteName="Content"
+            initialRouteName="Splash"
         >
-            <Stack.Screen name="Splash" component={SplashScreen}/>
+            <Stack.Screen name="Splash" component={SplashScreen} />
             <Stack.Screen name="Auth" component={MainStackNavigator}/>
             <Stack.Screen name="Content" component={MainBottomTabNavigator}/>
             <Stack.Screen name="Policy" component={PolicyScreen}/>

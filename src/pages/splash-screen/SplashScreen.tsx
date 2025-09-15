@@ -1,8 +1,8 @@
+import BackgroundApp from '@components/BackgroundApp'
 import { Image, Text } from '@libs/ui'
+import { StackProps } from '@navigations/MainNavigation'
 import { useNavigation } from '@react-navigation/native'
 import { NativeStackNavigationProp } from '@react-navigation/native-stack'
-import { StackProps } from '@navigations/MainNavigation'
-import BackgroundApp from '@components/BackgroundApp'
 import { useEffect } from 'react'
 
 const SplashScreen = () => {
@@ -10,7 +10,7 @@ const SplashScreen = () => {
 
   useEffect(() => {
     setTimeout(() => {
-      navigation.navigate("Content", {screen: 'Home'});
+      navigation.navigate('Content', { screen: 'Main', params: { screen: 'Home' } });
     }, 3000);
   }, []);
 
