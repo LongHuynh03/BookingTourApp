@@ -5,14 +5,15 @@ import {
   FlatList,
 } from 'react-native';
 import { Text, Image, VStack, Input, InputIcon, InputField, InputSlot, Button, HStack } from '@libs/ui';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { useNavigation } from '@react-navigation/native';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { StackProps } from '@navigations/MainNavigation';
 import BackgroundApp from '@components/BackgroundApp';
 import { PinIcon, Search, User } from 'lucide-react-native';
 import { dataEventLocal, dataListTourLocal } from './data';
+import { getListTour } from './HomeSevice';
 
 export type Event = {
   id: string;
@@ -93,7 +94,7 @@ const ItemTour = ({
   item,
   index,
   onPress,
-}: {item: Tour; index: number; onPress: () => void}) => {
+}: { item: Tour; index: number; onPress: () => void }) => {
   return (
     <Pressable
       onPress={onPress}
@@ -101,7 +102,7 @@ const ItemTour = ({
       style={{
         backgroundColor: "#F5F4F8",
         width: Dimensions.get('screen').width * 0.44,
-        height: Dimensions.get('screen').width * 0.7,
+        height: Dimensions.get('screen').width * 0.55,
         marginRight: index % 2 === 0 ? 10 : 0,
       }}
     >
@@ -109,8 +110,9 @@ const ItemTour = ({
         <VStack className="relative">
           <Image
             source={{ uri: item.image }}
-            className="w-full self-center rounded-2xl"
-            style={{ height: Dimensions.get('screen').width * 0.467, resizeMode: "stretch" }}
+            className="w-full h-[180px] self-center rounded-2xl"
+            style={{ resizeMode: "stretch" }}
+            alt={item.name}
           />
 
           <VStack
@@ -177,9 +179,9 @@ const HeaderHome2 = (props: HeaderHomeProps) => {
 const TextPlus: React.FC<TextPlusProps> = ({
   textBolds,
   text,
-  boldClassName = 'font-bold text-[12px] text-blue-500',
+  boldClassName = 'font-bold text-[20px] text-blue-500',
   viewClassName = 'flex-row items-center w-full',
-  textClassName = 'text-[12px] font-medium text-black',
+  textClassName = 'text-[20px] font-medium text-black',
   numberOfLines,
 }) => {
   const getTextWithBold = (input: string, boldTexts: string[]) => {
@@ -216,13 +218,26 @@ const HomeScreen = () => {
   const [imageAvatar, setImageAvatar] = useState('');
   const [dataEvent, setDataEvent] = useState<Event[]>([]);
   const [dataTour, setDataTour] = useState<Tour[]>([]);
-  const ITEM_WIDTH = Dimensions.get('screen').width * 0.7 + 15;
 
-  useEffect(() => {
-    setDataEvent(dataEventLocal);
-    setDataTour(dataListTourLocal);
-  }, [])
+  useFocusEffect(
+    useCallback(() => {
+      // khi screen focus thì chạy code này
+      setDataEvent(dataEventLocal);
 
+      getListTour()
+        .then((res) => {
+          setDataTour(res);
+        })
+        .catch((err) => {
+          console.log('Error get list tour', err);
+        });
+
+      // có thể return cleanup nếu cần
+      return () => {
+        // cleanup khi screen unfocus
+      };
+    }, []) // deps
+  );
 
   const renderItemBanner = (item: Event) => {
     return (
@@ -251,25 +266,26 @@ const HomeScreen = () => {
       />
       <SafeAreaView className="flex-1 px-[20px]">
         <VStack>
-          <TextPlus
-            textBolds={[dataUser?.name + '']}
-            text={
+          <Text className=' w-full text-[#4a4a4a] text-[25px]'>
+            {
               dataUser?.name === undefined
                 ? `Xin chào! \nHãy bắt đầu khám phá`
                 : `Xin chào, ${dataUser?.name}! \nHãy bắt đầu khám phá`
             }
-            boldClassName="font-bold text-[#4a4a4a] text-[25px] leading-[40px] tracking-[0.75px]"
-            viewClassName="flex"
-            textClassName="text-[#4a4a4a] text-[25px] leading-[40px] tracking-[0.75px] w-full"
-            numberOfLines={2}
-          />
-          <Input variant="rounded">
-            <InputSlot>
-              <InputIcon>
-                <Search size={24} color={"#234F68"} />
-              </InputIcon>
-            </InputSlot>
+          </Text>
+          <Input
+            className="my-4 p-4"
+            style={{
+              height: 50,                // chiều cao 400
+              backgroundColor: '#F5F4F8', // màu nền
+              borderRadius: 20,           // bo tròn 20
+            }}
+          >
+
             <InputField placeholder="Tìm kiếm địa điểm, tour du lịch" />
+            <InputSlot className='boder-l-2 border-gray-300'>
+              <InputIcon as={Search} size={16} color="gray" />
+            </InputSlot>
           </Input>
         </VStack>
 
@@ -277,8 +293,8 @@ const HomeScreen = () => {
           data={dataTour}
           numColumns={2}
           keyExtractor={(item) => item._id}
-          renderItem={({item, index}) => (
-            <ItemTour item={item} index={index} onPress={() => {}}/>
+          renderItem={({ item, index }) => (
+            <ItemTour item={item} index={index} onPress={() => { }} />
           )}
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{ paddingBottom: 20 }}
