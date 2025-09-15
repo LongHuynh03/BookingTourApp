@@ -80,7 +80,6 @@ const CustomInput = <T extends FieldValues>({
                 passwordRules=""
                 autoCorrect={false}
                 returnKeyType="next"
-                blurOnSubmit={false}
                 focusable={!disabled}
                 importantForAutofill="no"
                 className={`text-base ${

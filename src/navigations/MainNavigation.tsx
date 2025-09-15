@@ -9,7 +9,6 @@ import SplashScreen from "@pages/splash-screen/SplashScreen";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { Home, Search, User } from 'lucide-react-native';
-import React from 'react';
 import { useAuth } from '../hooks';
 
 export type StackProps = {
@@ -34,16 +33,8 @@ const Bottomtab = createBottomTabNavigator();
 const LoginScreenWrapper = (props: any) => <LoginScreen {...props} />;
 const RegisterScreenWrapper = (props: any) => <RegisterScreen {...props} />;
 
-// LoginTabWrapper - Component để navigate đến Login full screen
-const LoginTabWrapper = (props: any) => {
-  const { navigation } = props;
-  
-  React.useEffect(() => {
-    // Navigate to Login full screen when this tab is pressed
-    navigation.navigate('Login');
-  }, [navigation]);
-  
-  return null; // This component doesn't render anything
+const LoginTabWrapper = () => {
+  return null;
 };
 
 const MainStackNavigator = () => {
@@ -115,7 +106,13 @@ const MainBottomTabNavigator = () => {
                     options={{
                         tabBarIcon: ({ color }) => <TabBarProfileIcon color={color} />,
                         tabBarLabel: 'Đăng nhập'
-                    }} 
+                    }}
+                    listeners={({ navigation }) => ({
+                        tabPress: (e) => {
+                            e.preventDefault();
+                            navigation.navigate('Login');
+                        },
+                    })}
                 />
             )}
         </Bottomtab.Navigator>
